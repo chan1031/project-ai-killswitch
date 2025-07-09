@@ -7,3 +7,5 @@ wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stab
 
 2.chrome driver
 wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+
+apt-get install -y chromium-chromedriver

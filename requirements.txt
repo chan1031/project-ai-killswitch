@@ -11,5 +11,7 @@ libu2f-udev
 python-dotenv
 google-api-python-client
 langchain-google-community
+google-generativeai anthropic
+
 
 apt-get install -y chromium-chromedriver

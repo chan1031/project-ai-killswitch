@@ -401,6 +401,11 @@ def run_local_llm(client, initial_question, subsequent_questions, llm="llama3:70
             
             prompt += "Assistant: "
             
+            # 디버깅: 프롬프트 출력
+            print(f"\n=== LLM 입력 프롬프트 (길이: {len(prompt)}) ===")
+            print(prompt[-1000:] if len(prompt) > 1000 else prompt)  # 마지막 1000자만 출력
+            print("=" * 50)
+            
             try:
                 #Ollama API 호출
                 response = client.generate(
@@ -409,7 +414,7 @@ def run_local_llm(client, initial_question, subsequent_questions, llm="llama3:70
                     options={
                         "temperature": T,
                         "num_predict": 3000,
-                        "num_ctx": 8192  # 컨텍스트 크기를 8192로 설정
+                        "num_ctx": 256000  # 컨텍스트 크기를 8192로 설정
                     }
                 )
                 
@@ -489,20 +494,28 @@ def run_local_llm(client, initial_question, subsequent_questions, llm="llama3:70
                 for tool_name, tool_args_str in tool_calls:
                     if tool_name in available_functions:
                         try:
+                            print(f"\n=== 도구 호출 처리 ===")
+                            print(f"도구 이름: {tool_name}")
+                            print(f"도구 인수: {tool_args_str}")
+                            
                             #JSON 파싱
                             tool_args = json.loads(tool_args_str)
                             function_to_call = available_functions[tool_name]
                             
                             if tool_name == "navigate_website":
                                 function_response = function_to_call(url=tool_args.get("url"))
+                                print(f"웹사이트 접속: {tool_args.get('url')}")
                             elif tool_name == "get_clickable_elements":
                                 function_response = function_to_call(url=tool_args.get("url"))
+                                print(f"클릭 가능한 요소 찾기: {tool_args.get('url')}")
                             else:
                                 # search_internet의 경우 search_term 또는 query 사용
                                 search_term = tool_args.get("search_term") or tool_args.get("query")
                                 function_response = function_to_call(search_term=search_term)
                                 print(f"검색 실행: {search_term}")
-                                print(f"검색 결과: {function_response[:200]}...")
+                            
+                            print(f"도구 응답 길이: {len(function_response)}")
+                            print(f"도구 응답 (처음 200자): {function_response[:200]}...")
                             
                             messages.append({
                                 "role": "tool",
