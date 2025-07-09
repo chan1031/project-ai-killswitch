@@ -1,0 +1,15 @@
+selenium==4.27.1
+beautifulsoup4
+ollama
+requests
+pandas 
+langchain-community 
+langchain 
+google-search-results
+webdriver_manager
+libu2f-udev
+python-dotenv
+google-api-python-client
+langchain-google-community
+
+apt-get install -y chromium-chromedriver
